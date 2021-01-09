@@ -1,0 +1,9 @@
+    kivi:
+        build:
+            context: ./kivitendo-docker
+            args:
+              - BUILD_DATE=${BDATE}
+              - VERSION=${VERSION}
+              - LOCALE=${LOCALE}
+              - POSTGRES_VERSION=${POSTGRES_VERSION}
+              - KIVITENDO_TEMPLATE=${KIVITENDO_TEMPLATE}

@@ -31,13 +31,11 @@ To learn more about kivitendo please visit the maintainers page at [kivitendo.de
 This repository contains the necessary tools to run a [kivitendo.de](http://www.kivitendo.de/index.html) 
 stack on [Docker](https://www.docker.com/) using [Docker Compose](https://docs.docker.com/compose/).  
 
-The stack and kivitendo image is based on debian (currently buster:slim) and will include Apache2 and all the necessary packages 
-for kivitendo-erp and kivitendo-crm. For ease of
-use a CUPS server is included to get printers configured and running as well as a kivitendo task_server background
-worker.
+The stack and kivitendo image is based on debian (currently buster:slim) and will include Apache2 and all 
+the necessary packages for kivitendo-erp and kivitendo-crm. For ease of use a CUPS server is included to 
+get printers configured and running as well as a kivitendo task_server background worker.
 
-A Postgresql database is part of this stack using the official container 
-(e.g. the official postgresql build).
+A Postgresql database is part of this stack using the official container (e.g. the official postgresql build).
 
 # Installation
 

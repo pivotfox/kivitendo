@@ -1,15 +1,7 @@
 version: "3"
 services:
     kivi:
-        build:
-            context: ./kivitendo-docker
-            args:
-              - BUILD_DATE=${BDATE}
-              - VERSION=${VERSION}
-              - LOCALE=${LOCALE}
-              - POSTGRES_VERSION=${POSTGRES_VERSION}
-              - KIVITENDO_TEMPLATE=${KIVITENDO_TEMPLATE}
-#        image: ptechjg/kivitendo-docker:$VERSION
+        image: ptechjg/kivitendo-docker:$VERSION
         container_name: ${NAME_KIVI}
         restart: ${RESTART_POLICY}
         environment:
