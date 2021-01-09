@@ -1,0 +1,59 @@
+version: "3"
+services:
+    kivi:
+        build:
+            context: ./kivitendo-docker
+            args:
+              - BUILD_DATE=${BDATE}
+              - VERSION=${VERSION}
+              - LOCALE=${LOCALE}
+              - POSTGRES_VERSION=${POSTGRES_VERSION}
+              - KIVITENDO_TEMPLATE=${KIVITENDO_TEMPLATE}
+#        image: ptechjg/kivitendo-docker:$VERSION
+        container_name: ${NAME_KIVI}
+        restart: ${RESTART_POLICY}
+        environment:
+            - postgres_host
+            - postgres_user
+            - postgres_password
+            - kivitendo_version
+            - kivitendo_user
+            - kivitendo_password
+            - kivitendo_adminpassword
+            - CRM
+            - cups_user
+            - cups_password
+        ports:
+            - '${HTTP_PORT}:80'
+            - '${CUPS_PORT}:631'
+        volumes:
+            - kivid_config:/var/www/kivitendo-erp/config
+            - kivid_templ:/var/www/kivitendo-erp/templates/company
+            - kivid_webdav:/var/www/kivitendo-erp/webdav
+            - kivid_documents:/var/www/kivitendo-erp/kivi_documents
+            - kivid_patches:/var/www/patches
+            - kivid_cups:/etc/cups
+            - /var/run/dbus:/var/run/dbus
+        network_mode: host
+        depends_on:
+            - db
+    db:
+        image: postgres:${POSTGRES_VERSION}
+        container_name: ${NAME_DB}
+        environment:
+            - POSTGRES_PASSWORD=${postgres_password}
+            - POSTGRES_USER=${postgres_user}
+            - PGDATA
+        ports:
+            - '${POSTGRES_PORT}:5432'
+        volumes:
+            - postgres:${PGDATA}
+        network_mode: host
+volumes:
+    postgres:
+    kivid_templ:
+    kivid_config:
+    kivid_webdav:
+    kivid_documents:
+    kivid_patches:
+    kivid_cups:
