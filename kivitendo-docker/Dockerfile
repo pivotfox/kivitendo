@@ -150,7 +150,7 @@ VOLUME  ["/var/www/kivitendo-erp/templates/$KIVITENDO_TEMPLATE", \
          "/var/www/patches"]
 
 COPY rootfs/ /
-RUN chmod +x /usr/local/bin/*.sh
+RUN chmod +x /usr/local/bin/*.sh && chmod a=rwxt /tmp
 
 # Apache configuration
 #
