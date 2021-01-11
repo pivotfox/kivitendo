@@ -46,8 +46,8 @@ In order to quickly run kivitendo on a machine running Docker and Docker Compose
 -   Download and extract the [latest release](https://github.com/ptec-hjg/kivitendo-compose/releases/latest)  
 	Alternatively, you can clone the repository:  
 	```bash
-git clone https://github.com/ptec-hjg/kivitendo-compose
-cd kivitendo-compose
+	git clone https://github.com/ptec-hjg/kivitendo-compose
+	cd kivitendo-compose
 	```
 -   Create a `.env` file by copying and adjusting env.example  
         `cp env.example .env`
