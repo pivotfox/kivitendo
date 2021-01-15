@@ -38,6 +38,7 @@ the necessary packages for kivitendo-erp and kivitendo-crm. For ease of use a CU
 get printers configured and running as well as a kivitendo task_server background worker.
 
 A Postgresql database is part of this stack using the official container (e.g. the official postgresql build).
+To get direct access to your databases a phpPgAdmin container is included as well.
 
 # Installation
 
@@ -69,6 +70,7 @@ Variable | Description | Example
 -------- | ----------- | -------
 NAME_KIVI | Name of kivitendo container | kivid
 NAME_DB | Name of postgres container | postgres2
+NAME_PGADMIN | Name of phpPgAdmin container | phppgadmin
 RESTART_POLICY | Container restart policy | unless-stopped
 TZ | Time zone of your kivitendo server  | Europe/Berlin
 kivitendo_version | Kivitendo version to check out | release-3.5.6 or master
@@ -76,6 +78,9 @@ kivitendo_branch | branch for private customizations | customize
 CRM | activate kivitendo-crm  | yes or no
 HTTP_PORT | Exposed HTTP port | 80
 CUPS_PORT | Exposed CUPS port | 631
+PGADMIN_PORT | Exposed phpPgAdmin port | 6080
+PGADMIN_SSL_PORT | Exposed phpPgAdmin SSL port | 6443
+DOCKER_HOST_ADDRESS | IP of your docker host | 192.168.123.12
 
 These configuration options are already set and most of them don't need to be changed.  
 
