@@ -2,11 +2,14 @@
 
 # Create a backup of databases and documents
 
+# Set this to your kivitendo-compose installation directory
+BASE=${PWD}
+
 # Include .env file
-. ${PWD}/.env
+. ${BASE}/.env
 
 DATE=`date -I`
-BACKUP_DIR=${PWD}/backup
+BACKUP_DIR=${BASE}/backup
 DEST=${BACKUP_DIR}/backup_${DATE}
 
 # Name of database you created from the kivitendo administration area
@@ -28,11 +31,12 @@ docker exec -i ${NAME_DB} pg_dump -U ${postgres_user} -C  kivitendo_auth > ${DES
 docker exec -i ${NAME_DB} pg_dump -U ${postgres_user} -C  ${DB_MAND} > ${DEST}/${DB_MAND}-`date +%Y%m%d_%R`.sql
 # backup documents
 tar cfz ${DEST}/kivi-data-`date +%Y%m%d_%R`.tar.gz \
-${VOLUMES}/$(basename ${PWD})_kivid_config \
-${VOLUMES}/$(basename ${PWD})_kivid_cups \
-${VOLUMES}/$(basename ${PWD})_kivid_templ \
-${VOLUMES}/$(basename ${PWD})_kivid_documents \
-${VOLUMES}/$(basename ${PWD})_kivid_webdav \
-${VOLUMES}/$(basename ${PWD})_kivid_patches \
-${VOLUMES}/$(basename ${PWD})_postgres 
+${VOLUMES}/$(basename ${BASE})_kivid_config \
+${VOLUMES}/$(basename ${BASE})_kivid_cups \
+${VOLUMES}/$(basename ${BASE})_kivid_templ \
+${VOLUMES}/$(basename ${BASE})_kivid_documents \
+${VOLUMES}/$(basename ${BASE})_kivid_webdav \
+${VOLUMES}/$(basename ${BASE})_kivid_patches \
+${VOLUMES}/$(basename ${BASE})_kivid_exim \
+${VOLUMES}/$(basename ${BASE})_postgres 
 

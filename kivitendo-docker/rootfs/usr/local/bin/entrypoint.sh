@@ -65,6 +65,8 @@ if [ -f /tmp/container_first ]; then
   # exim4 can't bind to ::1, so update configuration
   sed -i "s/dc_local_interfaces.*/dc_local_interfaces='127.0.0.1 ; '/" /etc/exim4/update-exim4.conf.conf
   update-exim4.conf
+  echo "root: ${root_alias}" >> /etc/aliases
+  newaliases
 
   echo "  setting CUPS configuration ..."
   # Add printer administrator and disable sudo password checking
