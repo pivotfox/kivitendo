@@ -34,7 +34,10 @@ if [ -f /tmp/container_first ]; then
   # checkout standard kivitendo version
   echo "  checking out version ${kivitendo_version} ..."
   cd /var/www/kivitendo-erp
-  git checkout ${kivitendo_version} || die "error on checking out"
+  git checkout ${kivitendo_version} || die "error on checking out erp"
+  cd /var/www/kivitendo-crm
+  git checkout ${kivitendo_crm_version} || die "error on checking out crm"
+  cd /var/www/kivitendo-erp
 
   # activate crm module
   if [ "$CRM" = 'yes' -o "$CRM" = 'YES'  -o "$CRM" = '1' ]; then
@@ -59,16 +62,14 @@ if [ -f /tmp/container_first ]; then
   git checkout -b ${kivitendo_branch} || die "error on checking out erp branch"
   for file in /var/www/patches/erp/*.patch
   do
-    echo "  patching file $file"
-    if [ -f $file ]; then git am $file >> /var/www/patches/erp.log || true; fi
+    if [ -f $file ]; then echo "  patching file $file" && git am $file >> /var/www/patches/erp.log || true; fi
   done
 
   cd /var/www/kivitendo-crm || die "error on checking out crm branch"
-  git checkout -b ${kivitendo_branch}
+  git checkout -b ${kivitendo_crm_branch} || die "error on checking out crm branch"
   for file in /var/www/patches/crm/*.patch
   do
-    echo "  patching file $file"
-    if [ -f $file ]; then git am $file >> /var/www/patches/crm.log || true; fi
+    if [ -f $file ]; then echo "  patching file $file" && git am $file >> /var/www/patches/crm.log || true; fi
   done
 
   echo "  setting mailer configuration ..."

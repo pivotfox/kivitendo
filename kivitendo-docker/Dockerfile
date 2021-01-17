@@ -32,6 +32,9 @@ ENV cups_user admin
 ENV cups_password admin
 ENV webdav_user webdav
 ENV webdav_password webdav
+ENV root_alias root
+ENV kivitendo_crm_version master
+ENV kivitendo_crm_branch customize
 
 
 
