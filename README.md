@@ -81,6 +81,7 @@ CUPS_PORT | Exposed CUPS port | 631
 PGADMIN_PORT | Exposed phpPgAdmin port | 6080
 PGADMIN_SSL_PORT | Exposed phpPgAdmin SSL port | 6443
 DOCKER_HOST_ADDRESS | IP of your docker host | 192.168.123.12
+root_alias | Alias email address for user 'root' | info@mydomain.de
 
 These configuration options are already set and most of them don't need to be changed.  
 
@@ -178,16 +179,13 @@ Configuring the CUPS system is beyond this guide, please take a look at
 [Debian System Printing](https://wiki.debian.org/SystemPrinting).
 
 When adding a printer you may have to enter administrative credentials which you had defined 
-using the '-e "cups_user/password"' parameters.
+using the 'cups_user/password' parameters.
 
 It can be useful to 'Set Allowed Users' to 'root www-data print'.
 
-If you want access your CUPS configuration from outside your kivitendo container (e.g. for backup reason) you can add
-this line to your command with which you start the kivitendo container:
+To access your CUPS configuration from outside your kivitendo container (e.g. for backup reason) you can access
+the exposed directory `kivid_cups`.
 
-```bash
- -v kivid_cups:/etc/cups \
-```
 
 ## WebDAV
 
@@ -199,6 +197,34 @@ http://<ip_of_your_linux_box>/webdav
 
 The default username and password are 'webdav' and 'webdav'.  
 You can change the defaults to your own within the `.env` file.
+
+## Email
+
+Emailing is done with a preconfigured exim4. To make changed to the exim4 configuration files you can access
+the exposed directory `kivid_exim`.
+
+A typical configuration to send emails via a smarthost using TLS you would perform the following steps.
+
+- Create a file `exim4.conf.localmacros`:  
+```bash
+MAIN_TLS_ENABLE = 1
+AUTH_CLIENT_ALLOW_NOTLS_PASSWORDS = 1
+```
+
+- Edit the file `passwd.client` and append the credentials for your smarthost, e.g.:  
+```bash
+# <any target mail server>:login:password
+*:info@mydomain.de:mysecret
+```
+
+- Edit the file `update-exim4.conf.conf` and configure at least these variables:  
+```bash
+dc_eximconfig_configtype='smarthost'
+dc_local_interfaces='127.0.0.1 ; '
+dc_readhost='mydomain.de' # append domain name for outgoing emails
+dc_smarthost='mail.mysmarthost.de::587' # address & port of external SMTP server
+```
+
 
 
 # Maintenance
