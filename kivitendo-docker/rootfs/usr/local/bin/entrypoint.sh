@@ -19,6 +19,12 @@ run_as() {
     fi
 }
 
+die() {
+    local message=${1-Died}
+    echo "${BASH_SOURCE[1]}: line ${BASH_LINENO[0]}: ${FUNCNAME[1]}: $message." >&2
+    exit 1
+}
+
 echo "waiting for postgres container to startup ..."
 until psql "host=$postgres_host user=$postgres_user password=$postgres_password" -c '\q'; do
 	>&2 echo "Postgres is not yet available - waiting ..."
