@@ -38,5 +38,6 @@ ${VOLUMES}/$(basename ${BASE})_kivid_documents \
 ${VOLUMES}/$(basename ${BASE})_kivid_webdav \
 ${VOLUMES}/$(basename ${BASE})_kivid_patches \
 ${VOLUMES}/$(basename ${BASE})_kivid_exim \
-${VOLUMES}/$(basename ${BASE})_postgres 
+${VOLUMES}/$(basename ${BASE})_postgres  \
+${BASE})/.env
 
