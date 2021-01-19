@@ -11,4 +11,4 @@ docker volume create --name $(basename ${PWD})_kivid_webdav
 docker volume create --name $(basename ${PWD})_postgres
 docker volume create --name $(basename ${PWD})_kivid_patches
 docker volume create --name $(basename ${PWD})_kivid_cups
-
+docker volume create --name $(basename ${PWD})_kivid_exim

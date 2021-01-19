@@ -12,3 +12,4 @@ ln -sn ${VOLUMES}/$(basename ${PWD})_kivid_webdav/_data ${PWD}/kivid_webdav
 ln -sn ${VOLUMES}/$(basename ${PWD})_postgres/_data ${PWD}/postgres2
 ln -sn ${VOLUMES}/$(basename ${PWD})_kivid_patches/_data ${PWD}/kivid_patches
 ln -sn ${VOLUMES}/$(basename ${PWD})_kivid_cups/_data ${PWD}/kivid_cups
+ln -sn ${VOLUMES}/$(basename ${PWD})_kivid_exim/_data ${PWD}/kivid_exim
