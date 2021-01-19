@@ -5,6 +5,13 @@
 # Set this to your kivitendo-compose installation directory
 BASE=${PWD}
 
+# Name of database you created from the kivitendo administration area
+DB_MAND=db_mand1
+
+# In general you have not to change anything below unless
+# you want to backup more than one database
+#####################################################################
+
 # Include .env file
 . ${BASE}/.env
 
@@ -12,8 +19,6 @@ DATE=`date -I`
 BACKUP_DIR=${BASE}/backup
 DEST=${BACKUP_DIR}/backup_${DATE}
 
-# Name of database you created from the kivitendo administration area
-DB_MAND=db_mand1
 
 # Path to docker volumes on this host
 VOLUMES=/var/lib/docker/volumes
