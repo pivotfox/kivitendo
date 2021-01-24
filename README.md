@@ -27,6 +27,7 @@ To learn more about kivitendo please visit the maintainers page at [kivitendo.de
     - [Stopping and starting the container](#Stopping-and-starting-the-container)
     - [Upgrading](#upgrading)
 - [Manage customizations](#manage-customization)
+- [Troubleshooting](#troubleshooting)
 
 # Introduction
 
@@ -287,10 +288,11 @@ To upgrade to a newer releases, simply follow these steps.
 docker-compose down
 ```
 
-- **Step 2**: Get the new Docker image version
+- **Step 2**: Get the new Git repository and Docker image version
 
 ```bash
 git pull
+docker pull ptechjg/kivitendo-compose
 ```
 
 - **Step 4**: Start the image and run the container
@@ -300,6 +302,8 @@ docker-compose up -d
 ```
 
 Please use kivitendo's administrative login first to let kivitendo upgrade your databases.  
+
+Please compare the `env.example` and your local `.env` to see if any variables are needed to add.
 
 
 # Manage Customizations
@@ -346,4 +350,28 @@ the above 'git format-patch' command.
 You should check the appropriate log files generated within the patch directories to be sure that your
 patches are proccessed successfully.  
 Any conflicts have to be resolved by you.
+
+# Troubleshooting
+
+After starting up the compose stack you can check the containers for sanity by controlling the container logs.  
+
+```bash
+docker-compose logs kivi
+```
+
+```bash
+docker-compose logs db
+```
+
+If you want to dive into a container you can use:  
+
+```bash
+docker-compose exec  kivi bash
+```
+
+or
+
+```bash
+docker-compose exec  db bash
+```
 
