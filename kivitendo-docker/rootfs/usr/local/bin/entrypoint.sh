@@ -40,9 +40,11 @@ if [ -f /tmp/container_first ]; then
   # checkout standard kivitendo version
   echo "  checking out version ${kivitendo_version} ..."
   cd /var/www/kivitendo-erp
-  git checkout ${kivitendo_version} || die "error on checking out erp"
+  #git checkout ${kivitendo_version} || die "error on checking out erp"
+  git checkout master || die "error on checking out erp"
   cd /var/www/kivitendo-crm
-  git checkout ${kivitendo_crm_version} || die "error on checking out crm"
+  #git checkout ${kivitendo_crm_version} || die "error on checking out crm"
+  git checkout master || die "error on checking out crm"
   cd /var/www/kivitendo-erp
 
   # activate crm module
@@ -64,19 +66,19 @@ if [ -f /tmp/container_first ]; then
 
   echo "  checking out custom git branch ${kivitendo_branch} & apply patches ..."
 
-  cd /var/www/kivitendo-erp
-  git checkout -b ${kivitendo_branch} || die "error on checking out erp branch"
-  for file in /var/www/patches/erp/*.patch
-  do
-    if [ -f $file ]; then echo "  patching file $file" && git am $file >> /var/www/patches/erp.log || true; fi
-  done
+ # cd /var/www/kivitendo-erp
+ git checkout -b ${kivitendo_branch} || die "error on checking out erp branch"
+ for file in /var/www/patches/erp/*.patch
+ do
+   if [ -f $file ]; then echo "  patching file $file" && git am $file >> /var/www/patches/erp.log || true; fi
+ done
 
-  cd /var/www/kivitendo-crm || die "error on checking out crm branch"
-  git checkout -b ${kivitendo_crm_branch} || die "error on checking out crm branch"
-  for file in /var/www/patches/crm/*.patch
-  do
-    if [ -f $file ]; then echo "  patching file $file" && git am $file >> /var/www/patches/crm.log || true; fi
-  done
+ cd /var/www/kivitendo-crm || die "error on checking out crm branch"
+ git checkout -b ${kivitendo_crm_branch} || die "error on checking out crm branch"
+ for file in /var/www/patches/crm/*.patch
+ do
+   if [ -f $file ]; then echo "  patching file $file" && git am $file >> /var/www/patches/crm.log || true; fi
+ done
 
   echo "  setting mailer configuration ..."
   # exim4 can't bind to ::1, so update configuration
@@ -108,7 +110,8 @@ if [ -f /tmp/container_first ]; then
   echo "  setting Apache fcgid configuration ..."
   sed -i '/FcgidConnectTimeout.*/a \
     FcgidConnectTimeout 270 \
-    FcgidIOTimeout 7200 \
+    FcgidIOTimeout 7200 
+#   FcgidIOTimeout 7200 \
 #    FcgidProcessLifeTime 7200 \
 #    FcgidMaxRequestLen 1000000000 \
 #    IdleTimeout 280 \

@@ -1,15 +1,13 @@
-FROM debian:buster-slim
+FROM debian:bookworm
 
 LABEL description="kivitendo container"
 
-MAINTAINER Hans-Jürgen Grimminger <info@ptec.de>
-
 # build options
 #
-ARG VERSION=3.5.6
+ARG VERSION=3.9.1
 ARG BUILD_DATE
 ARG LOCALE=de_DE
-ARG POSTGRES_VERSION=11
+ARG POSTGRES_VERSION=16
 ARG KIVITENDO_TEMPLATE=company
 
 # Environment configuration options
@@ -17,24 +15,24 @@ ARG KIVITENDO_TEMPLATE=company
 ENV VERSION=$VERSION
 ENV BUILD_DATE=${BUILD_DATE}
 
-ENV locale $LOCALE
-ENV postgres_user postgres
-ENV postgres_password postgres
-ENV postgres_host localhost
-ENV kivitendo_version master
-ENV kivitendo_user kivitendo
-ENV kivitendo_password kivitendo
-ENV kivitendo_adminpassword admin123
-ENV KIVITENDO_TEMPLATE ${KIVITENDO_TEMPLATE}
-ENV kivitendo_branch customize
-ENV CRM no
-ENV cups_user admin
-ENV cups_password admin
-ENV webdav_user webdav
-ENV webdav_password webdav
-ENV root_alias root
-ENV kivitendo_crm_version master
-ENV kivitendo_crm_branch customize
+ENV locale=$LOCALE
+ENV postgres_user=postgres
+ENV postgres_password=postgres
+ENV postgres_host=DB
+ENV kivitendo_version=master
+ENV kivitendo_user=kivitendo
+ENV kivitendo_password=kivitendo
+ENV kivitendo_adminpassword=admin123
+ENV KIVITENDO_TEMPLATE=${KIVITENDO_TEMPLATE}
+ENV kivitendo_branch=customize
+ENV CRM=yes
+ENV cups_user=admin
+ENV cups_password=admin
+ENV webdav_user=webdav
+ENV webdav_password=webdav
+ENV root_alias=root
+ENV kivitendo_crm_version=master
+ENV kivitendo_crm_branch=customize
 
 
 
@@ -42,55 +40,120 @@ ENV kivitendo_crm_branch customize
 #
 RUN apt-get update && apt-get install -y locales && rm -rf /var/lib/apt/lists/* \
     && localedef -i ${locale} -c -f UTF-8 -A /usr/share/locale/locale.alias ${locale}.UTF-8
-ENV LANG ${locale}.utf8
+ENV LANG=${locale}.utf8
 
 # Add backport repository
-RUN printf "deb http://deb.debian.org/debian buster-backports main contrib non-free" > /etc/apt/sources.list.d/backports.list &&\
-    printf "# APT PINNING PREFERENCES\nPackage: *\nPin: release a=buster-backports\nPin-Priority: 200\n" > /etc/apt/preferences.d/99backports 
+#RUN printf "deb http://deb.debian.org/debian buster-backports main contrib non-free" > /etc/apt/sources.list.d/backports.list &&\
+#    printf "# APT PINNING PREFERENCES\nPackage: *\nPin: release a=buster-backports\nPin-Priority: 200\n" > /etc/apt/preferences.d/99backports 
 
 # Install Packages
 #
 # sections: erp, tex, crm, other
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
-RUN apt-get -qq update && apt-get -y upgrade
+RUN apt-get update && apt-get -y upgrade
 RUN DEBIAN_FRONTEND=noninteractive apt install -y  \
-  apache2 libarchive-zip-perl libclone-perl \
-  libconfig-std-perl libdatetime-perl libdbd-pg-perl libdbi-perl \
-  libemail-address-perl  libemail-mime-perl libfcgi-perl libjson-perl \
-  liblist-moreutils-perl libnet-smtp-ssl-perl libnet-sslglue-perl \
-  libparams-validate-perl libpdf-api2-perl librose-db-object-perl \
-  librose-db-perl librose-object-perl libsort-naturally-perl \
-  libstring-shellquote-perl libtemplate-perl libtext-csv-xs-perl \
-  libtext-iconv-perl liburi-perl libxml-writer-perl libyaml-perl \
-  libimage-info-perl libgd-gd2-perl libapache2-mod-fcgid \
-  libfile-copy-recursive-perl libalgorithm-checkdigits-perl \
-  libcrypt-pbkdf2-perl git libcgi-pm-perl libtext-unidecode-perl libwww-perl \
-                  poppler-utils libhtml-restrict-perl \
-  libdatetime-set-perl libset-infinite-perl liblist-utilsby-perl \
-  libdaemon-generic-perl libfile-flock-perl libfile-slurp-perl \
-  libfile-mimeinfo-perl libpbkdf2-tiny-perl libregexp-ipv6-perl \
-  libdatetime-event-cron-perl libexception-class-perl libcam-pdf-perl \
+  apache2 \
+  libarchive-zip-perl \
+  libclone-perl \
+  libconfig-std-perl \
+  libdatetime-perl \
+  libdbd-pg-perl \
+  libdbi-perl \
+  libemail-address-perl \
+  libemail-mime-perl \
+  libfcgi-perl \
+  libjson-perl \
+  liblist-moreutils-perl \
+  libnet-smtp-ssl-perl \
+  libnet-sslglue-perl \
+  libparams-validate-perl \
+  libpdf-api2-perl \
+  librose-db-object-perl \
+  librose-db-perl \
+  librose-object-perl \
+  libsort-naturally-perl \
+  libstring-shellquote-perl \
+  libtemplate-perl \
+  libtext-csv-xs-perl \
+  libtext-iconv-perl \
+  liburi-perl \
+  libxml-writer-perl \
+  libyaml-perl \
+  libimage-info-perl \
+  libgd-gd2-perl \
+  libapache2-mod-fcgid \
+  libfile-copy-recursive-perl \
+  libalgorithm-checkdigits-perl \
+  libcrypt-pbkdf2-perl \
+  git \
+  libcgi-pm-perl \
+  libtext-unidecode-perl \
+  libwww-perl \
+  poppler-utils \
+  libhtml-restrict-perl \
+  libdatetime-set-perl \
+  libset-infinite-perl \
+  liblist-utilsby-perl \
+  libdaemon-generic-perl \
+  libfile-flock-perl \
+  libfile-slurp-perl \
+  libfile-mimeinfo-perl \
+  libpbkdf2-tiny-perl \
+  libregexp-ipv6-perl \
+  libdatetime-event-cron-perl \
+  libexception-class-perl \
+  libcam-pdf-perl \
   libxml-libxml-perl \
   libpath-tiny-perl \
+  libuuid-tiny-perl \
   \
-  texlive-base-bin texlive-latex-recommended texlive-fonts-recommended \
-  texlive-latex-extra texlive-lang-german texlive-generic-extra texlive-xetex \
-  ghostscript lynx \
+  texlive-base-bin \
+  texlive-latex-recommended \
+  texlive-fonts-recommended \
+  texlive-latex-extra \
+  texlive-lang-german \
+  texlive-latex-extra \
+  texlive-xetex \
+  ghostscript \ 
+  lynx \
   \
-  libapache2-mod-php php-gd php-imap php-mail php-mail-mime \
-  php-pear php-mdb2 php-mdb2-driver-pgsql php-pgsql  \
-  php-fpdf imagemagick fonts-freefont-ttf php-curl \
-  libphp-jpgraph php-enchant aspell-de libset-crontab-perl  \
+  libapache2-mod-php \
+  php-gd \
+  php-imap \
+  php-mail \
+  php-mail-mime \
+  php-pear \
+  php-mdb2 \
+  php-mdb2-driver-pgsql \
+  php-pgsql  \
+  php-fpdf \
+  imagemagick \
+  fonts-freefont-ttf \
+  php-curl \
+  libencode-imaputf7-perl\
+  libimager-perl \
+  libimager-qrcode-perl \
+  libmath-round-perl \
+  libmail-imapclient-perl \
+  librest-client-perl \
+  libtry-tiny-perl \
+
+  #\
+  php-enchant \
+  aspell-de \
+  libset-crontab-perl \
   \
-  lsb-release exim4 supervisor sudo gnupg \
+  lsb-release \
+  exim4 \
+  supervisor \
+  sudo \
+  gnupg \
   mc \
-  make liblog-log4perl-perl
-
-# Install package(s) from backports
-RUN DEBIAN_FRONTEND=noninteractive apt-get update && apt-get -t buster-backports install -y  \
-    aqbanking-tools
-
-
+  make \
+  liblog-log4perl-perl \
+  aqbanking-tools \
+  && rm -rf /var/lib/apt/lists/*
+#
 # Install PostgreSQL client
 #
 # Add PostgreSQL's PGP key & repository.
@@ -99,9 +162,9 @@ RUN echo "deb http://apt.postgresql.org/pub/repos/apt/ $(lsb_release -cs)-pgdg m
 # Install client
 RUN DEBIAN_FRONTEND=noninteractive apt-get update &&\
     apt-get install -y \
-    postgresql-client-${POSTGRES_VERSION}
+    postgresql-client-${POSTGRES_VERSION} \
+    && rm -rf /var/lib/apt/lists/*
 
-#
 # Add CUPS printing system
 RUN DEBIAN_FRONTEND=noninteractive apt-get update && apt-get install -y  \
   cups cups-client cups-bsd \
@@ -112,7 +175,8 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update && apt-get install -y  \
   hpijs-ppds \
   hp-ppd \
   hplip \
-  whois smbclient
+  whois smbclient \
+  && rm -rf /var/lib/apt/lists/*
 
 VOLUME  ["/etc/cups"]
 EXPOSE 631/tcp 631/udp
@@ -172,4 +236,3 @@ ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
 
 # Start supervisord to execute all services
 CMD ["/usr/local/bin/start.sh"]
-
