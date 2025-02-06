@@ -41,7 +41,7 @@ if [ -f /tmp/container_first ]; then
   echo "  checking out version ${kivitendo_version} ..."
   cd /var/www/kivitendo-erp
   #git checkout ${kivitendo_version} || die "error on checking out erp"
-  git checkout master || die "error on checking out erp"
+  git checkout release-3.9.1 || die "error on checking out erp"
   cd /var/www/kivitendo-crm
   #git checkout ${kivitendo_crm_version} || die "error on checking out crm"
   git checkout master || die "error on checking out crm"

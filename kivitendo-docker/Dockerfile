@@ -7,7 +7,7 @@ LABEL description="kivitendo container"
 ARG VERSION=3.9.1
 ARG BUILD_DATE
 ARG LOCALE=de_DE
-ARG POSTGRES_VERSION=16
+ARG POSTGRES_VERSION=12
 ARG KIVITENDO_TEMPLATE=company
 
 # Environment configuration options
