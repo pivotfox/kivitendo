@@ -1,0 +1,15 @@
+{
+    "icc": false,
+    "log-level": "info",
+    "userland-proxy": false,
+    "live-restore": true,
+    "no-new-privileges": true,
+    "userns-remap": "default",
+    "default-ulimits": {
+      "nofile": {
+        "Name": "nofile",
+        "Hard": 64000,
+        "Soft": 64000
+      }
+    }
+  }

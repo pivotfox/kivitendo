@@ -1,0 +1,84 @@
+#
+# Configuration options
+#
+
+#
+# Build configuration
+#
+#  Changing any of these values needs you to rebuild the image
+#
+
+VERSION=3.9.1
+BDATE=20250204
+
+# Database postgres version
+POSTGRES_VERSION=14
+# Kivitendo name of template to create/use
+KIVITENDO_TEMPLATE=company
+
+#
+# Runtime configuration
+#
+#  You should remove the existing container (docker-compose down)
+#  and maybe any database and/or configuration files before 'docker-compose up -d'
+#
+
+# Container names
+NAME_KIVI=pfoxkivi
+NAME_DB=pfoxpostgres
+NAME_PGADMIN=phppgadmin
+
+# Container restart policy
+RESTART_POLICY=unless-stopped
+
+# System locales & time zone
+LOCALE=de_DE
+TZ=Europe/Berlin
+
+# Kivitendo version to check out
+#  Set this to a specific release (e.g. kivitendo_version=release-3.5.6)
+#  or to 'master' to work with the latest version
+kivitendo_version=release-3.9.1
+kivitendo_crm_version=master
+
+# Name of branch for private customizations
+kivitendo_branch=customize
+kivitendo_crm_branch=customize
+
+# activate CRM modules
+CRM=yes
+
+# Exposed HTTP port
+HTTP_PORT=80
+
+# Exposed CUPS port
+CUPS_PORT=631
+
+# IP address of this Docker host
+#DOCKER_HOST_ADDRESS=192.168.0.10
+
+# Alias email address for user 'root'
+root_alias=info@mydomain.de
+
+# Database postgres host access & credentials
+postgres_host=db
+POSTGRES_PORT=5432
+PGDATA=/var/lib/postgresql/data/pgdata
+postgres_user=postgres
+postgres_password=postgres
+
+# Kivitendo credentials
+kivitendo_user=kivitendo
+kivitendo_password=kivitendo
+kivitendo_adminpassword=admin123
+
+# Kivitendo name of template to create/use
+kivitendo_template=${KIVITENDO_TEMPLATE}
+
+# CUPS printing credentials
+cups_user=admin
+cups_password=admin
+
+# WEBDAV credentials
+webdav_user=webdav
+webdav_password=webdav

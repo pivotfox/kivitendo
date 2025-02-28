@@ -1,0 +1,144 @@
+# docker-compose.yml
+
+services:
+  https-portal:
+    image: steveltn/https-portal
+    container_name: https-portal
+    # Remove the user setting - this is critical
+    # user: "1000:1000" 
+    ports:
+      - "127.0.0.1:80:80"
+      - "127.0.0.1:443:443"
+    environment:
+      DOMAINS: 'kivi.pivotfox.de -> http://kivi:80'
+      STAGE: 'production'  # Using local for testing with self-signed certs
+    volumes:
+      - ./certs:/etc/nginx/certs:ro
+      - https_portal_data:/var/lib/https-portal
+    networks:
+      - kivinet
+    restart: on-failure:5
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+          cpus: '0.5'
+          pids: 100
+    security_opt:
+      - no-new-privileges:true
+      - apparmor:docker-default
+    read_only: false  # Allow writing to files
+    tmpfs:
+      - /tmp
+    depends_on:
+      - kivi
+
+  kivi:
+    build:
+      context: ./kivitendo-docker
+      args:
+        - BUILD_DATE=${BDATE}
+        - VERSION=${VERSION}
+        - LOCALE=${LOCALE}
+        - POSTGRES_VERSION=${POSTGRES_VERSION}
+        - KIVITENDO_TEMPLATE=${KIVITENDO_TEMPLATE}
+    image: pfoxkivi:latest
+    container_name: ${NAME_KIVI}
+    environment:
+      - postgres_host
+      - postgres_user
+      - postgres_password
+      - kivitendo_version
+      - kivitendo_user
+      - kivitendo_password
+      - kivitendo_adminpassword
+      - CRM
+      - cups_user
+      - cups_password
+      - root_alias
+      - kivitendo_crm_version
+      - kivitendo_crm_branch
+    volumes:
+      - kivid_config:/var/www/kivitendo-erp/config
+      - kivid_templ:/var/www/kivitendo-erp/templates/company
+      - kivid_webdav:/var/www/kivitendo-erp/webdav
+      - kivid_documents:/var/www/kivitendo-erp/kivi_documents
+      - kivid_patches:/var/www/patches:ro
+      - kivid_cups:/etc/cups:ro
+      - kivid_exim:/etc/exim4:ro
+      - /var/run/dbus:/var/run/dbus
+    networks:
+      - kivinet
+    restart: on-failure:5
+    depends_on:
+      db:
+        condition: service_healthy  # Wait for PostgreSQL to be healthy
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+          cpus: '1.0'
+          pids: 200
+    security_opt:
+      - no-new-privileges:true
+      - apparmor:docker-default
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:80"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    read_only: false
+
+  db:
+    image: postgres:12
+    container_name: ${NAME_DB}
+    environment:
+      - POSTGRES_PASSWORD=${postgres_password}
+      - POSTGRES_USER=${postgres_user}
+      # Simplified PGDATA path - PostgreSQL expects it to be the parent directory
+      - PGDATA=/var/lib/postgresql/data
+    ports:
+      - '127.0.0.1:${POSTGRES_PORT}:5432'
+    volumes:
+      # Simplified volume mapping
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - kivinet
+    restart: on-failure:5
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+          cpus: '1.0'
+          pids: 150
+    security_opt:
+      - no-new-privileges:true
+      - apparmor:docker-default
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${postgres_user}"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s  # Give PostgreSQL time to initialize
+    # Using default command, as custom command was causing issues
+
+networks:
+  kivinet:
+    driver: bridge
+    internal: false
+
+volumes:
+  postgres_data:  # Simplified volume name
+  https_portal_data:
+  kivid_templ:
+  kivid_config:
+  kivid_webdav:
+  kivid_documents:
+  kivid_patches:
+  kivid_cups:
+  kivid_exim:

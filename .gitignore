@@ -1,0 +1,9 @@
+*.swp
+*.log
+.env
+.env.bak
+docker-compose.override.yml
+VERSION
+Makefile
+README.md.tmpl
+Changelog.md.tmpl
