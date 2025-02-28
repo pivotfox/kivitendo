@@ -54,6 +54,7 @@ RUN apt-get update && apt-get -y upgrade
 RUN DEBIAN_FRONTEND=noninteractive apt install -y  \
   apache2 \
   libarchive-zip-perl \
+  libipc-run-perl \
   libclone-perl \
   libconfig-std-perl \
   libdatetime-perl \
