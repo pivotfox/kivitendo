@@ -7,8 +7,8 @@ services:
     # Remove the user setting - this is critical
     # user: "1000:1000" 
     ports:
-      - "127.0.0.1:80:80"
-      - "127.0.0.1:443:443"
+      - "80:80"
+      - "443:443"
     environment:
       DOMAINS: 'kivi.pivotfox.de -> http://kivi:80'
       STAGE: 'production'  # Using local for testing with self-signed certs
